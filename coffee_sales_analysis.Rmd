@@ -30,7 +30,7 @@ unique(data$coffee_name)
 ## Check for unusual coffee prices
 unique(data$money)
 
-##Remove duplicate data
+## Remove duplicate data
 clean_data <- data %>% distinct()
 
 ## Remove data with empty entries, with the exception of "card" when "cash_type" == "cash". 
