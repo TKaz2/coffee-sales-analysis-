@@ -1,4 +1,4 @@
-The objective of this analysis is to determine coffee flavour popularity, and its relation to the time of the year.
+Analyzing data of coffee flavour purchases via vending machine.
 
 - Ensured data is clean to use
 - Investigated price changes over time
