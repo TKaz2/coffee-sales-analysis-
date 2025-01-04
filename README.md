@@ -1,3 +1,5 @@
+ATTACHED TO THIS REPOSITORY IS A USER FRIENDLY HTML FILE, PLEASE DOWNLOAD AND OPEN IT TO VIEW MARKDOWN FILE.
+
 Data analysis of coffee sales made via vending machine. (https://www.kaggle.com/datasets/ihelon/coffee-sales/data) 
 My intention is to replicate a company's goal to maximize profits. 
 
@@ -9,7 +11,6 @@ RMarkdown clearly shows each of the following steps taken:
 - Visulization of coffee flavour popularity for each month
 - Made recommendations
 
-Attached to this repository is a very user friendly html file, designed for stakeholders who are unfamiliar with R. 
 
 Continuing to update this analysis as more data is available. 
 
