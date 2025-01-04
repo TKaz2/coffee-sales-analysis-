@@ -1,13 +1,15 @@
-Analyzed data of coffee flavours purchased via vending machine.
+Data analysis of coffee sales made via vending machine. (https://www.kaggle.com/datasets/ihelon/coffee-sales/data) 
+My intention is to replicate a company's goal to maximize profits, and to future proof inventory. 
 
-- Ensured data is clean to use
-- Investigated price changes over time
-- Analyzed flavour popularity over time
+RMarkdown clearly shows each of the following steps taken:
 
-Attached to this repository is a very user friendly html file. All you need to do is download the html file, and open it.
-Viewers will be able to follow along my steps, and view the visuals this way very easily. 
+- Cleaning of data
+- Investigation of price changes over time, which is found to be normalized amongst the flavours
+- Visulization of coffee flavour purchase distributions for each month
+- Final visualization showing all the data as a singular, effective graph
 
+Attached to this repository is a very user friendly html file, designed for stakeholders who are unfamiliar with R. 
 
-Work in progress as data between Nov to Feb inclusive is unavailable. Will reanalyze and polish project in the future. 
+Continuing to update this analysis as more data is available. 
 
 
