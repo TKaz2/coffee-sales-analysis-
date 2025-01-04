@@ -1,7 +1,8 @@
 To view the entirety of this project, please download and open the html file in this repository. I made an RMarkdown which is very user friendly and suitable for stakeholders who may not be familiar with R. 
 
-Data analysis of coffee sales made via vending machine. (https://www.kaggle.com/datasets/ihelon/coffee-sales/data) 
-My intention is to replicate a company's goal to maximize profits. 
+My intention with this project is to show employers how my skills in using R can assist in a company's goal to maximize profits.
+
+The data is taken from (https://www.kaggle.com/datasets/ihelon/coffee-sales/data).
 
 RMarkdown clearly shows each of the following steps taken:
 
