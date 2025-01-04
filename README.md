@@ -7,6 +7,7 @@ RMarkdown clearly shows each of the following steps taken:
 - Investigation of price changes over time, which is found to be normalized amongst the flavours
 - Visulization of coffee flavour purchase distributions for each month
 - Final visualization showing all the data as a singular, effective graph
+- Recommendations
 
 Attached to this repository is a very user friendly html file, designed for stakeholders who are unfamiliar with R. 
 
