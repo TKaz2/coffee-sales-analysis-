@@ -1,19 +1,19 @@
 ---
 title: "Coffee Sales Overtime"
 author: "Terence Morita"
-date: "2024-11-06"
+date: "2025-01-04"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
-data <- read_csv("data_2024_11_06.csv")
+data <- read_csv("data_2025_01_04.csv")
 ```
 
 ## Introduction
 
-The objective of this analysis is to determine coffee flavour popularity, and its relation to the time of the year. The data set contains data between March 2024 and October 2024 inclusive. This is a relatively new data set and does not contain the months between November and February inclusive. So, I am planning to reanalyze the dataset once the data from missing months become available. The analysis works with an [open source dataset](https://www.kaggle.com/datasets/ihelon/coffee-sales/data) from Kaggle, by Yaroslav Isaikenkov. 
+The objective of this analysis is to determine coffee flavour popularity, and its relation to the time of the year. With this information, a story could be made on whether adjusting the prices of certain flavours during given months could result in greater profits. Also, insights gained could be used to future proof inventory stocking. The data set contains data between March 2024 and December 2024 inclusive. As more data is available, this analysis will be rerun. The analysis works with an [open source dataset](https://www.kaggle.com/datasets/ihelon/coffee-sales/data) from Kaggle, by Yaroslav Isaikenkov. 
 
 ## Cleaning Data
 
@@ -25,7 +25,7 @@ To ensure data is clean to work with, I checked for duplicates, missing or inval
 summary(data)
 str(data)
 
-## Ensure there are no mispelled coffee names
+## Ensure there are no misspelled coffee names
 unique(data$coffee_name)
 
 ## Check for unusual coffee prices
@@ -45,7 +45,7 @@ clean_data <- clean_data %>%
 ```
 ## Price Changes Over the Year
 
-Price is an important factor customers consider when making purchases. Running the code below will provide a visualization of the price changes over the year for each coffee flavour. Note that every flavour undergoes the same transformation of price change over the year. Also note that the most drastic price changes occur between June and July, and September to October.
+Price is an important factor customers consider when making purchases. Running the code below will provide a visualization of the price changes over the year for each coffee flavour. We find that every flavour undergoes the same transformation of price change over the year. As a result, we now know the prices of the flavours are normalized throughout the year.
 
 ```{r} 
 
@@ -59,91 +59,116 @@ clean_data <- clean_data %>%
 price_data <- clean_data %>%
   group_by(month, coffee_name) %>%
   summarise(avg_price = mean(money, na.rm = TRUE)) %>%
-  arrange(match(month, c("Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct")))  # Order months correctly
+  arrange(match(month, c("Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov","Dec")))  
 
 # Create the plot
 price_plot <- ggplot(price_data, aes(x = month, y = avg_price, color = coffee_name, group = coffee_name)) +
-  geom_line() +  # Plot the price change as lines
-  geom_point() +  # Add points to make the graph clearer
+  geom_line() +  
+  geom_point() +  
   labs(title = "Price Changes of Coffee Flavours (March to October 2024)",
        x = "Month",
        y = "Average Price",
        color = "Coffee flavour") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  
 
-# Print the price change plot
 print(price_plot)
+```
+## Number of Sales made per Month, plus Revenue per Month
+
+In relation to the previous visual, we could verify whether the price adjustment timings are appropriate to the amount of sales made for specific time periods. Upon comparing the two visuals, we could see that number of sales increase specifically when the prices drop around June, and then decrease when the prices are raised around October. This is an insight!
+
+
+```{r} 
+# Summarize total purchases and revenue for each month
+monthly_totals <- clean_data %>%
+  group_by(month) %>%
+  summarise(
+    total_purchases = n(),
+    total_revenue = sum(money), 
+    .groups = "drop"
+  ) %>%
+  mutate(month = factor(month, levels = months_visual)) %>%
+  arrange(month)
+
+# Create the bar plot with revenue labels
+total_purchases_bar_plot <- ggplot(monthly_totals, aes(x = month, y = total_purchases)) +
+  geom_bar(stat = "identity", fill = "steelblue") + 
+  geom_text(
+    aes(label = paste0("$", round(total_revenue, 2))), 
+    vjust = -0.5, 
+    color = "black",
+    size = 4
+  ) +
+  labs(
+    title = "Total Coffee Purchases and Revenue Per Month",
+    x = "Month",
+    y = "Number of Purchases"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
+
+print(total_purchases_bar_plot)
+
+
+
 ```
 
 
 
 
-## Visualization
+## Complete Visualiation for Coffee Flavour Popularity
 
-We now visualize the proportions of coffee flavour purchases for every month between March 2024 to October 2024. 
+**The following is the most informative visual for coffee flavour popularity over the course of a year**
 
 ```{r}
 
-months_visual <- c("Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct") ## Months contained in dataset
+# Summarize data across all months
+coffee_trends <- clean_data %>%
+  group_by(month, coffee_name) %>%
+  summarise(purchase_count = n(), .groups = "drop") %>%
+  arrange(factor(month, levels = months_visual)) %>%
+  mutate(month = factor(month, levels = months_visual))
+
+# Create the line plot
+line_plot <- ggplot(coffee_trends, aes(x = month, y = purchase_count, color = coffee_name, group = coffee_name)) +
+  geom_line(size = 1) +  
+  geom_point(size = 2) + 
+  labs(
+    title = "Monthly Coffee Flavour Popularity",
+    x = "Month",
+    y = "Number of Purchases",
+    color = "Coffee Flavour"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1), 
+    legend.title = element_blank() 
+  )
 
 
-## Iterate code for each month
-for (month_name in months_visual) {
-  
- 
-  month_data <- clean_data %>%
-    filter(month == month_name)  
-  
-  ## Indicate variables of interest
-  coffee_by_month <- month_data %>%
-    group_by(coffee_name) %>%
-    summarise(purchase_count = n()) %>%
-    arrange(desc(purchase_count)) %>%
-    mutate(percentage = purchase_count / sum(purchase_count) * 100)  
-  
-  ## Visualize data as pie charts
-  pie_chart <- ggplot(coffee_by_month, aes(x = "", y = purchase_count, fill = coffee_name)) +
-    geom_bar(stat = "identity", width = 1) +    
-    coord_polar(theta = "y") +                 
-    labs(title = paste("Coffee Type Popularity in", month_name)) +  
-    theme_void() +                             
-    theme(legend.title = element_blank()) +      
-    geom_text(aes(label = paste0(round(percentage, 1), "%")),   
-              position = position_stack(vjust = 0.5),           
-              color = "white")  
+print(line_plot)
 
-  print(pie_chart)
-}
- 
+
+
 ```
 
-## Analysis
 
-**Important note that unfortunately, the dataset does not contain data between Nov and Feb. I will reanalyze the dataset when data from missing months become available. For now, I will anaylze the current available data. (2024-11-06)**
+## Recommendations
 
-**Following observations are made per flavour, organized by price bracket:**
+# Most Optimal Normalized Pricing
 
-**Cappuccino** spikes in popularity in April, which extends until the end of June. In the other months, it remains at a fairly consistent purchase rate. This may indicate that cappuccino is a preferred flavour during mid to late Spring. 
+The greatest revenue was during the time the normalized price was at the lowest of the year (refer to the revenue analysis). I suggest that this pricing is the most optimal.  
 
-**Cocoa** is very unpopular throughout the year. However, we could see that it relatively increases in Oct. This may indicate that winter favours cocoa, however the winter data does not exist to confirm this.
+# Potential Price Adjustments for Specific Flavours Based on Demand
 
-**Hot Chocolate** spikes in popularity during October, which may indicate that customers enjoy Hot Chocolate during colder seasons. Also, March has a higher Hot Chocolate count compared to the months after. We may be able to deduce that Hot Chocolate purchase gets higher between Oct and March as a result. Additional data from November to February could confirm this. 
+We could see that initially the flavours are relatively close in popularity. However as time progresses, we could see the drastic difference in the popularity of the flavours. 
 
-**Latte** remains a popular choice all year, with a lower than usual purchase during specifically April. It is even more popular during the fall months. 
+For instance, the most obvious is that both Americano with Milk and Latte are by far the most bought flavours during summer and fall. 
 
-------------------------------------------------------------------------------
+Seeing that the Latte costs more than Americano with milk, it could be beneficial to raise the price of the cheaper flavour to match the more expensive one, and then collect more data to observe its result. 
 
-**Americano with Milk** spikes in popularity as summer approaches, and remains popular (relative to other months) until October. Seeing that it is relatively not as popular during March, this may imply that this flavour gets less popular during the cold months of Oct to Feb. Unfortunately, the lack of winter data makes it difficult to confirm this. Despite Americano being considerably cheaper than its milk counterpart, it is still consistently less popular. Most people are willing to pay additional money for the milk. 
-
-------------------------------------------------------------------------------
-
-**Americano** is consistently a less popular choice than its milk containing counterpart. March is the only month in the dataset which shows milk-less Americano to be more popular. As a result, Winter season may affect this preference which extends to March, but the current dataset cannot confirm this. 
-
-**Cortado** does not appear to follow any seasonal trend in the given months.
-
-------------------------------------------------------------------------------
-
-**Espresso** is an unpopular choice all year round. 
 
 
 
