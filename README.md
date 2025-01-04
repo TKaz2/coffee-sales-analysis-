@@ -1,6 +1,7 @@
 To view the entirety of this project, please download and open the html file in this repository. I made an RMarkdown which is very user friendly and suitable for stakeholders who may not be familiar with R. 
 
-My intention with this project is to show employers how my skills in using R can assist in a company's goal to maximize profits.
+My intention with this project is to show employers how my skills in using R can assist in a company's goal to maximize profits. 
+The data consists of coffee sales made through a vending machine. 
 
 The data is taken from (https://www.kaggle.com/datasets/ihelon/coffee-sales/data).
 
